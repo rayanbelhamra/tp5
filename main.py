@@ -5,7 +5,7 @@ import arcade
 import game_state
 #import arcade.gui
 
-from attack_animation import AttackType, AttackAnimation
+#from attack_animation import AttackType, AttackAnimation
 from game_state import GameState
 
 SCREEN_WIDTH = 1024
@@ -37,11 +37,11 @@ class MyGame(arcade.Window):
        arcade.set_background_color(arcade.color.BLACK_OLIVE)
 
        self.player = None
-       self.computer = None
-       self.players = None
-       self.rock = None
-       self.paper = None
-       self.scissors = None
+       self.computer = arcade.Sprite('assets/compy.png', 1.5)
+       self.players = arcade.Sprite('assets/faceBeard.png', 0.3)
+       self.rock = arcade.Sprite('assets/srock.png', 0.4)
+       self.paper = arcade.Sprite('assets/spaper.png', 0.4)
+       self.scissors = arcade.Sprite('assets/scissors.png',0.4)
        self.player_score = 0
        self.computer_score = 0
        self.player_attack_type = {}
@@ -60,6 +60,32 @@ class MyGame(arcade.Window):
        # Prenez note que vous devriez attribuer une valeur à tous les attributs créés dans __init__
 
        pass
+   def draw_menu(self):
+       """
+       Dessiner le menu du jeu
+       """
+       arcade.draw_text(SCREEN_TITLE,
+                        0,
+                        SCREEN_HEIGHT - DEFAULT_LINE_HEIGHT * 2,
+                        arcade.color.BLACK_BEAN,
+                        60,
+                        width=SCREEN_WIDTH,
+                        align="center")
+
+       self.draw_instructions()
+       self.players.center_x = 100
+       self.players.center_y = 300
+       self.players.draw()
+       self.computer.center_x = 900
+       self.computer.center_y = 300
+       self.computer.draw()
+       self.rock.center_x = 25
+       self.rock.center_y = 200
+       self.paper.center_x = 100
+       self.paper.center_y = 200
+       self.scissors.center_x = 175
+       self.scissors.center_y = 200
+       self.draw_scores()
 
 
 
@@ -95,7 +121,29 @@ class MyGame(arcade.Window):
        """
        Dépendemment de l'état de jeu, afficher les instructions d'utilisation au joueur (appuyer sur espace, ou sur une image)
        """
-       pass
+       if self.game_state == GameState.NOT_STARTED:
+           arcade.draw_text("Appuyer sur espace pour commencer",
+                            0,
+                            SCREEN_HEIGHT - DEFAULT_LINE_HEIGHT * 4,
+                            arcade.color.BLACK_BEAN,
+                            30,
+                            width=SCREEN_WIDTH,
+                            align="center")
+       elif self.game_state == GameState.ROUND_ACTIVE:
+              arcade.draw_text("Choisissez votre attaque",
+                             0,
+                             SCREEN_HEIGHT - DEFAULT_LINE_HEIGHT * 4,
+                             arcade.color.BLACK_BEAN,
+                             30,
+                             width=SCREEN_WIDTH,
+                             align="center")
+              arcade.draw_rectangle_outline(25, 200, 50, 50, arcade.color.BLACK_BEAN, 5)
+              arcade.draw_rectangle_outline(100, 200, 50, 50, arcade.color.BLACK_BEAN, 5)
+              arcade.draw_rectangle_outline(175, 200, 50, 50, arcade.color.BLACK_BEAN, 5)
+              self.rock.draw()
+              self.paper.draw()
+              self.scissors.draw()
+
 
    def on_draw(self):
        """
@@ -108,16 +156,8 @@ class MyGame(arcade.Window):
        arcade.start_render()
 
        # Display title
-       arcade.draw_text(SCREEN_TITLE,
-                        0,
-                        SCREEN_HEIGHT - DEFAULT_LINE_HEIGHT * 2,
-                        arcade.color.BLACK_BEAN,
-                        60,
-                        width=SCREEN_WIDTH,
-                        align="center")
-
+       self.draw_menu()
        self.draw_instructions()
-       self.players.draw()
        self.draw_possible_attack()
        self.draw_scores()
 
