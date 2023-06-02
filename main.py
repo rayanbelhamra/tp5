@@ -5,7 +5,7 @@ import arcade
 import game_state
 #import arcade.gui
 
-#from attack_animation import AttackType, AttackAnimation
+from attack_animation import AttackType, AttackAnimation
 from game_state import GameState
 
 SCREEN_WIDTH = 1024
@@ -143,6 +143,9 @@ class MyGame(arcade.Window):
               self.rock.draw()
               self.paper.draw()
               self.scissors.draw()
+              arcade.draw_text("le pointage du joueur est 0",-312.5,75,arcade.color.BABY_PINK,20,width = SCREEN_WIDTH, align= "center")
+              arcade.draw_text("le pointage de l'ordinateur est 0", 300, 75, arcade.color.BABY_PINK, 20,
+                               width=SCREEN_WIDTH, align="center")
 
 
    def on_draw(self):
@@ -176,6 +179,8 @@ class MyGame(arcade.Window):
        #vérifier si le jeu est actif (ROUND_ACTIVE) et continuer l'animation des attaques
        #si le joueur a choisi une attaque, générer une attaque de l'ordinateur et valider la victoire
        #changer l'état de jeu si nécessaire (GAME_OVER)
+       if game_state == GameState.ROUND_ACTIVE:
+           self.player_attack_type
        pass
 
    def on_key_press(self, key, key_modifiers):
@@ -190,6 +195,10 @@ class MyGame(arcade.Window):
        http://arcade.academy/arcade.key.html
        """
        if (self.game_state == game_state.GameState.NOT_STARTED and key  == arcade.key.SPACE):
+           self.game_state = game_state.GameState.ROUND_ACTIVE
+       if (self.game_state == game_state.GameState.ROUND_DONE and key  == arcade.key.SPACE):
+           self.game_state = game_state.GameState.ROUND_ACTIVE
+       if (self.game_state == game_state.GameState.GAME_OVER and key  == arcade.key.SPACE):
            self.game_state = game_state.GameState.ROUND_ACTIVE
 
    def reset_round(self):
@@ -215,7 +224,21 @@ class MyGame(arcade.Window):
 
        # Test de collision pour le type d'attaque (self.player_attack_type).
        # Rappel que si le joueur choisi une attaque, self.player_attack_chosen = True
-       pass
+
+       if self.rock.collides_with_point((x,y)):
+           self.player_attack_type = AttackType.ROCK
+           self.player_attack_chosen = True
+
+       if self.paper.collides_with_point((x,y)):
+           self.player_attack_type = AttackType.PAPER
+           self.player_attack_chosen = True
+
+       if self.scissors.collides_with_point((x,y)):
+           self.player_attack_type = AttackType.SCISSORS
+           self.player_attack_chosen = True
+
+
+
 
 
 def main():
