@@ -86,6 +86,10 @@ class MyGame(arcade.Window):
        self.scissors.center_x = 175
        self.scissors.center_y = 200
        self.draw_scores()
+       arcade.draw_text("le pointage du joueur est 0", -312.5, 75, arcade.color.BABY_PINK, 20, width=SCREEN_WIDTH,
+                        align="center")
+       arcade.draw_text("le pointage de l'ordinateur est 0", 300, 75, arcade.color.BABY_PINK, 20,
+                        width=SCREEN_WIDTH, align="center")
 
 
 
@@ -143,9 +147,18 @@ class MyGame(arcade.Window):
               self.rock.draw()
               self.paper.draw()
               self.scissors.draw()
-              arcade.draw_text("le pointage du joueur est 0",-312.5,75,arcade.color.BABY_PINK,20,width = SCREEN_WIDTH, align= "center")
-              arcade.draw_text("le pointage de l'ordinateur est 0", 300, 75, arcade.color.BABY_PINK, 20,
-                               width=SCREEN_WIDTH, align="center")
+       elif self.game_state == GameState.ROUND_DONE:
+           arcade.draw_rectangle_outline(25, 200, 50, 50, arcade.color.BLACK_BEAN, 5)
+           arcade.draw_rectangle_outline(100, 200, 50, 50, arcade.color.BLACK_BEAN, 5)
+           arcade.draw_rectangle_outline(175, 200, 50, 50, arcade.color.BLACK_BEAN, 5)
+           if self.player_attack_type == AttackType.ROCK:
+               self.rock.draw()
+           elif self.player_attack_type == AttackType.PAPER:
+                self.paper.draw()
+           elif self.player_attack_type == AttackType.SCISSORS:
+                self.scissors.draw()
+
+
 
 
    def on_draw(self):
@@ -228,14 +241,17 @@ class MyGame(arcade.Window):
        if self.rock.collides_with_point((x,y)):
            self.player_attack_type = AttackType.ROCK
            self.player_attack_chosen = True
+           self.game_state = GameState.ROUND_DONE
 
        if self.paper.collides_with_point((x,y)):
            self.player_attack_type = AttackType.PAPER
            self.player_attack_chosen = True
+           self.game_state = GameState.ROUND_DONE
 
        if self.scissors.collides_with_point((x,y)):
            self.player_attack_type = AttackType.SCISSORS
            self.player_attack_chosen = True
+           self.game_state = GameState.ROUND_DONE
 
 
 
